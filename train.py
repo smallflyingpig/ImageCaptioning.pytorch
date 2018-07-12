@@ -147,7 +147,7 @@ def train(opt):
             val_loss, predictions, lang_stats = eval_utils.eval_split(model, crit, loader, eval_kwargs)
 
             # Write validation result into summary
-            if tf is not None:
+            if tf is not None and isinstance(lang_stats, dict):
                 add_summary_value(tf_summary_writer, 'validation loss', val_loss, iteration)
                 for k,v in lang_stats.items():
                     add_summary_value(tf_summary_writer, k, v, iteration)
@@ -199,6 +199,7 @@ def train(opt):
         # Stop if reaching max epochs
         if epoch >= opt.max_epochs and opt.max_epochs != -1:
             break
-
+#$ python train.py --id st --caption_model show_tell --input_json data/cocotalk.json --input_fc_dir data/cocotalk_fc --input_att_dir data/cocotalk_att --input_label_h5 data/cocotalk_label.h5 --batch_size 10 --learning_rate 5e-4 --learning_rate_decay_start 0 --scheduled_sampling_start 0 --checkpoint_path log_st --save_checkpoint_every 6000 --val_images_use 5000 --max_epochs 25
+#$ python train.py --id st --caption_model show_tell --input_json cocotalk_data/cocotalk.json --input_fc_dir cocotalk_data/cocotalk_image_fc --input_att_dir cocotalk_data/cocotalk_image_att --input_label_h5 cocotalk_data/cocotalk_label.h5 --batch_size 10 --learning_rate 5e-4 --learning_rate_decay_start 0 --scheduled_sampling_start 0 --checkpoint_path cocotalk_data/checkpoint --save_checkpoint_every 6000 --val_images_use 5000 --max_epochs 25 --language_eval=1
 opt = opts.parse_opt()
 train(opt)
